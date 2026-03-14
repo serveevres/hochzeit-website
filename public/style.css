@@ -126,8 +126,12 @@ h1, h2, h3 { font-family: var(--font-serif); font-weight: 700; line-height: 1.2;
   box-shadow: 0 6px 24px rgba(61, 53, 48, 0.12);
 }
 
-.gift-card.claimed {
+.gift-card.claimed:not(.claimed-own) {
   opacity: 0.65;
+}
+
+.gift-card.claimed-own {
+  border: 1px solid rgba(2, 113, 1, 0.3);
 }
 
 .gift-card__image {
@@ -238,6 +242,75 @@ h1, h2, h3 { font-family: var(--font-serif); font-weight: 700; line-height: 1.2;
   font-size: 0.875rem;
   flex: 1;
   justify-content: center;
+}
+
+.claimed-badge.claimed-mine {
+  background: #e8f5e9;
+  border-color: #a3d9a5;
+  color: var(--green);
+}
+
+/* ── Confirmation Modal ──────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(61, 53, 48, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-box {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 40px rgba(61, 53, 48, 0.18);
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  border-top: 3px solid var(--yellow);
+}
+
+.modal-title {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+}
+
+.modal-gift-name {
+  font-weight: 600;
+  color: var(--green);
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.modal-hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.modal-actions .btn {
+  flex: 1;
+  max-width: 180px;
 }
 
 /* ── RSVP Form ───────────────────────────────────────────── */

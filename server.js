@@ -47,6 +47,13 @@ app.post('/api/gifts/:id/claim', (req, res) => {
   res.json(db.claimGift(req.params.id));
 });
 
+// Public undo – guests can unclaim a gift they reserved in the same session
+app.post('/api/gifts/:id/unclaim-guest', (req, res) => {
+  const gift = db.getGiftById(req.params.id);
+  if (!gift) return res.status(404).json({ error: 'Geschenk nicht gefunden' });
+  res.json(db.unclaimGift(req.params.id));
+});
+
 app.post('/api/rsvp', (req, res) => {
   const { name, attending, guest_count, children_under3, vegetarian, friday_evening, food_restrictions, message } = req.body;
   if (!name || typeof name !== 'string' || name.trim().length === 0) {
