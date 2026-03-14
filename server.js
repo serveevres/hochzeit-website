@@ -48,7 +48,7 @@ app.post('/api/gifts/:id/claim', (req, res) => {
 });
 
 app.post('/api/rsvp', (req, res) => {
-  const { name, attending, food_restrictions, message } = req.body;
+  const { name, attending, guest_count, children_under3, vegetarian, friday_evening, food_restrictions, message } = req.body;
   if (!name || typeof name !== 'string' || name.trim().length === 0) {
     return res.status(400).json({ error: 'Name ist erforderlich' });
   }
@@ -58,6 +58,10 @@ app.post('/api/rsvp', (req, res) => {
   const rsvp = db.addRsvp({
     name: name.trim(),
     attending,
+    guest_count: attending ? (parseInt(guest_count) || 1) : 0,
+    children_under3: attending ? (parseInt(children_under3) || 0) : 0,
+    vegetarian: attending ? Boolean(vegetarian) : false,
+    friday_evening: attending ? Boolean(friday_evening) : false,
     food_restrictions: food_restrictions?.trim() || null,
     message: message?.trim() || null,
   });

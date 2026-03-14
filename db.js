@@ -19,11 +19,25 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     attending INTEGER NOT NULL,
+    guest_count INTEGER NOT NULL DEFAULT 1,
+    children_under3 INTEGER NOT NULL DEFAULT 0,
+    vegetarian INTEGER NOT NULL DEFAULT 0,
+    friday_evening INTEGER NOT NULL DEFAULT 0,
     food_restrictions TEXT,
     message TEXT,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
 `);
+
+// Migration: add new columns to existing databases
+[
+  'guest_count INTEGER NOT NULL DEFAULT 1',
+  'children_under3 INTEGER NOT NULL DEFAULT 0',
+  'vegetarian INTEGER NOT NULL DEFAULT 0',
+  'friday_evening INTEGER NOT NULL DEFAULT 0',
+].forEach(col => {
+  try { db.exec(`ALTER TABLE rsvps ADD COLUMN ${col}`); } catch {}
+});
 
 module.exports = {
   getAllGifts() {
@@ -63,11 +77,20 @@ module.exports = {
     return db.prepare('SELECT * FROM gifts WHERE id = ?').get(id);
   },
 
-  addRsvp({ name, attending, food_restrictions, message }) {
+  addRsvp({ name, attending, guest_count, children_under3, vegetarian, friday_evening, food_restrictions, message }) {
     const stmt = db.prepare(
-      'INSERT INTO rsvps (name, attending, food_restrictions, message) VALUES (?, ?, ?, ?)'
+      'INSERT INTO rsvps (name, attending, guest_count, children_under3, vegetarian, friday_evening, food_restrictions, message) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
     );
-    const result = stmt.run(name, attending ? 1 : 0, food_restrictions || null, message || null);
+    const result = stmt.run(
+      name,
+      attending ? 1 : 0,
+      guest_count || 1,
+      children_under3 || 0,
+      vegetarian ? 1 : 0,
+      friday_evening ? 1 : 0,
+      food_restrictions || null,
+      message || null,
+    );
     return db.prepare('SELECT * FROM rsvps WHERE id = ?').get(result.lastInsertRowid);
   },
 

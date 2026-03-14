@@ -213,15 +213,19 @@ async function loadRsvps() {
 function renderRsvpsTable(rsvps) {
   const tbody = document.getElementById('rsvps-tbody');
   if (rsvps.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:2rem">Noch keine Zusagen.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-muted);padding:2rem">Noch keine Zusagen.</td></tr>';
     return;
   }
   tbody.innerHTML = rsvps.map(r => `
     <tr>
       <td><strong>${esc(r.name)}</strong></td>
       <td><span class="badge ${r.attending ? 'badge-yes' : 'badge-no'}">${r.attending ? 'Ja' : 'Nein'}</span></td>
+      <td style="text-align:center">${r.attending ? (r.guest_count || 1) : '&#8212;'}</td>
+      <td style="text-align:center">${r.attending ? (r.children_under3 || 0) : '&#8212;'}</td>
+      <td style="text-align:center">${r.attending ? (r.vegetarian ? '&#10003;' : '&#8212;') : '&#8212;'}</td>
+      <td style="text-align:center">${r.attending ? (r.friday_evening ? '&#10003;' : '&#8212;') : '&#8212;'}</td>
       <td>${r.food_restrictions ? esc(r.food_restrictions) : '<span style="color:var(--text-muted)">&#8212;</span>'}</td>
-      <td style="max-width:220px;word-break:break-word">${r.message ? esc(r.message) : '<span style="color:var(--text-muted)">&#8212;</span>'}</td>
+      <td style="max-width:180px;word-break:break-word">${r.message ? esc(r.message) : '<span style="color:var(--text-muted)">&#8212;</span>'}</td>
       <td style="white-space:nowrap;color:var(--text-muted)">${formatDate(r.created_at)}</td>
       <td><button class="btn btn-danger btn-sm" onclick="deleteRsvp(${r.id})">x</button></td>
     </tr>
@@ -244,10 +248,14 @@ async function deleteRsvp(id) {
 }
 
 function exportRsvpsCsv() {
-  const rows = [['Name', 'Kommt', 'Essen/Allergien', 'Nachricht', 'Datum']];
+  const rows = [['Name', 'Kommt', 'Personen', 'Kinder <3', 'Vegetarisch', 'Freitagabend', 'Essen/Allergien', 'Nachricht', 'Datum']];
   allRsvps.forEach(r => rows.push([
     r.name,
     r.attending ? 'Ja' : 'Nein',
+    r.attending ? (r.guest_count || 1) : '',
+    r.attending ? (r.children_under3 || 0) : '',
+    r.attending ? (r.vegetarian ? 'Ja' : 'Nein') : '',
+    r.attending ? (r.friday_evening ? 'Ja' : 'Nein') : '',
     r.food_restrictions || '',
     r.message || '',
     r.created_at,

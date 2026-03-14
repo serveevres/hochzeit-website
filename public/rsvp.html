@@ -55,9 +55,39 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="food_restrictions">Essenswünsche / Allergien</label>
-          <textarea id="food_restrictions" name="food_restrictions" placeholder="z. B. vegetarisch, Laktoseintoleranz, Nussallergie …"></textarea>
+        <div id="attending-fields" style="display:none">
+          <div class="form-group">
+            <label for="guest_count">Anzahl Personen *</label>
+            <input type="number" id="guest_count" name="guest_count" min="1" max="20" value="1">
+          </div>
+
+          <div class="form-group">
+            <label for="children_under3">Davon Kinder unter 3 Jahren</label>
+            <input type="number" id="children_under3" name="children_under3" min="0" max="20" value="0">
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="vegetarian" name="vegetarian">
+                <span>Wir essen vegetarisch</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="friday_evening" name="friday_evening">
+                <span>Wir sind bereits am Freitagabend dabei</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="food_restrictions">Essenswünsche / Allergien <span style="color:var(--text-muted);font-weight:400">(optional)</span></label>
+            <textarea id="food_restrictions" name="food_restrictions" placeholder="z. B. Laktoseintoleranz, Nussallergie …"></textarea>
+          </div>
         </div>
 
         <div class="form-group">
@@ -78,6 +108,16 @@
 </footer>
 
 <script>
+  // Show/hide attending-specific fields based on radio selection
+  function updateAttendingFields() {
+    const checked = document.querySelector('input[name="attending"]:checked');
+    document.getElementById('attending-fields').style.display =
+      checked?.value === 'yes' ? 'block' : 'none';
+  }
+  document.querySelectorAll('.radio-group label').forEach(label => {
+    label.addEventListener('click', () => setTimeout(updateAttendingFields, 0));
+  });
+
   document.getElementById('rsvp-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -85,11 +125,17 @@
 
     const name = form.name.value.trim();
     const attendingVal = form.querySelector('input[name="attending"]:checked')?.value;
+    const isAttending = attendingVal === 'yes';
+    const guest_count = parseInt(form.guest_count.value) || 1;
+    const children_under3 = parseInt(form.children_under3.value) || 0;
+    const vegetarian = form.vegetarian.checked;
+    const friday_evening = form.friday_evening.checked;
     const food_restrictions = form.food_restrictions.value.trim();
     const message = form.message.value.trim();
 
     if (!name) return showAlert('Bitte gebt euren Namen ein.', 'error');
     if (!attendingVal) return showAlert('Bitte wählt aus, ob ihr kommt.', 'error');
+    if (isAttending && guest_count < 1) return showAlert('Bitte gebt die Anzahl der Personen an.', 'error');
 
     btn.disabled = true;
     btn.textContent = 'Wird gesendet…';
@@ -100,7 +146,11 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name,
-          attending: attendingVal === 'yes',
+          attending: isAttending,
+          guest_count,
+          children_under3,
+          vegetarian,
+          friday_evening,
           food_restrictions: food_restrictions || null,
           message: message || null,
         }),

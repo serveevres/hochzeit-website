@@ -315,6 +315,26 @@ h1, h2, h3 { font-family: var(--font-serif); font-weight: 700; line-height: 1.2;
   font-weight: 600;
 }
 
+/* Checkbox fields */
+.checkbox-group { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-family: 'Big Caslon', 'Book Antiqua', Palatino, serif;
+  color: var(--text);
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--green);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
 /* ── Alert / Success ─────────────────────────────────────── */
 .alert {
   padding: 1rem 1.25rem;
