@@ -89,7 +89,6 @@
   function renderCard(gift, myIds) {
     const claimed = !!gift.claimed;
     const isMine = myIds.includes(gift.id);
-    const nameJs = JSON.stringify(gift.name);
 
     const imgHtml = gift.image_url
       ? `<img class="gift-card__image" src="${escHtml(gift.image_url)}" alt="${escHtml(gift.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
@@ -98,7 +97,7 @@
 
     let actionHtml;
     if (!claimed) {
-      actionHtml = `<button class="btn btn-primary" onclick="claimGift(${gift.id}, ${nameJs})">Ich schenke das!</button>`;
+      actionHtml = `<button class="btn btn-primary" onclick="claimGift(${gift.id})">Ich schenke das!</button>`;
     } else if (isMine) {
       actionHtml = `
         <span class="claimed-badge claimed-mine">&#10003; Von euch reserviert</span>
@@ -133,8 +132,9 @@
   // ── Confirmation modal ──────────────────────────────────
   let pendingClaimId = null;
 
-  function claimGift(id, name) {
+  function claimGift(id) {
     pendingClaimId = id;
+    const name = document.querySelector(`#gift-${id} .gift-card__name`)?.textContent || '';
     document.getElementById('confirm-gift-name').textContent = name;
     document.getElementById('confirm-overlay').classList.add('open');
   }
@@ -220,8 +220,7 @@
         <span class="claimed-badge claimed-mine">&#10003; Von euch reserviert</span>
         <button class="btn btn-secondary btn-sm" onclick="unclaimGift(${id})">Aufheben</button>`;
     } else if (state === 'free') {
-      const nameJs = JSON.stringify(gift?.name || '');
-      footer.innerHTML = `<button class="btn btn-primary" onclick="claimGift(${id}, ${nameJs})">Ich schenke das!</button>${shopHtml}`;
+      footer.innerHTML = `<button class="btn btn-primary" onclick="claimGift(${id})">Ich schenke das!</button>${shopHtml}`;
     } else {
       footer.innerHTML = `<span class="claimed-badge">&#10003; Bereits vergeben</span>`;
     }
