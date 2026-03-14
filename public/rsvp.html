@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Florian & Sebastian – Zusage</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="couple">Florian &amp; Sebastian</div>
+  <div class="date">— Unsere Hochzeit —</div>
+</header>
+
+<nav class="site-nav">
+  <a href="/" class="active">Zusagen</a>
+  <a href="/wunschliste">Wunschliste</a>
+</nav>
+
+<main class="container">
+  <h1 class="section-title">Eure Zusage</h1>
+  <p class="section-subtitle">Wir freuen uns, wenn ihr uns mitteilt, ob ihr dabei sein könnt!</p>
+
+  <div id="success-view" style="display:none">
+    <div class="rsvp-card" style="text-align:center">
+      <div style="font-size:2rem;margin-bottom:1rem;color:var(--green)">&#10003;</div>
+      <h2 style="margin-bottom:0.5rem">Vielen Dank!</h2>
+      <p style="color:var(--text-muted);margin-bottom:1.5rem">Eure Nachricht ist bei uns angekommen. Wir freuen uns sehr!</p>
+      <a href="/wunschliste" class="btn btn-primary" style="display:inline-flex">Zur Wunschliste</a>
+    </div>
+  </div>
+
+  <div id="form-view">
+    <div class="rsvp-card">
+      <div id="alert-area"></div>
+
+      <form id="rsvp-form" novalidate>
+        <div class="form-group">
+          <label for="name">Euer Name *</label>
+          <input type="text" id="name" name="name" placeholder="z. B. Anna & Max Muster" required autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label>Kommt ihr? *</label>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="attending" value="yes" required>
+              <span>Ja, wir kommen!</span>
+            </label>
+            <label>
+              <input type="radio" name="attending" value="no">
+              <span>Leider nicht</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="food_restrictions">Essenswünsche / Allergien</label>
+          <textarea id="food_restrictions" name="food_restrictions" placeholder="z. B. vegetarisch, Laktoseintoleranz, Nussallergie …"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Nachricht an uns <span style="color:var(--text-muted);font-weight:400">(optional)</span></label>
+          <textarea id="message" name="message" placeholder="Ein paar liebe Worte für Florian & Sebastian …"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;padding:0.85rem">
+          Zusage absenden
+        </button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  Florian &amp; Sebastian &mdash; Wir freuen uns auf euch!
+</footer>
+
+<script>
+  document.getElementById('rsvp-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const btn = form.querySelector('button[type="submit"]');
+
+    const name = form.name.value.trim();
+    const attendingVal = form.querySelector('input[name="attending"]:checked')?.value;
+    const food_restrictions = form.food_restrictions.value.trim();
+    const message = form.message.value.trim();
+
+    if (!name) return showAlert('Bitte gebt euren Namen ein.', 'error');
+    if (!attendingVal) return showAlert('Bitte wählt aus, ob ihr kommt.', 'error');
+
+    btn.disabled = true;
+    btn.textContent = 'Wird gesendet…';
+
+    try {
+      const res = await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          attending: attendingVal === 'yes',
+          food_restrictions: food_restrictions || null,
+          message: message || null,
+        }),
+      });
+
+      if (res.ok || res.status === 201) {
+        document.getElementById('form-view').style.display = 'none';
+        document.getElementById('success-view').style.display = 'block';
+      } else {
+        const data = await res.json().catch(() => ({}));
+        showAlert(data.error || 'Etwas ist schiefgelaufen.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Zusage absenden';
+      }
+    } catch {
+      showAlert('Keine Verbindung. Bitte versuche es erneut.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Zusage absenden';
+    }
+  });
+
+  function showAlert(msg, type) {
+    const area = document.getElementById('alert-area');
+    area.innerHTML = `<div class="alert alert-${type}">${escHtml(msg)}</div>`;
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+</script>
+</body>
+</html>

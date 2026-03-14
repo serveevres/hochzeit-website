@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Florian & Sebastian – Wunschliste</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="couple">Florian &amp; Sebastian</div>
+  <div class="date">— Unsere Hochzeit —</div>
+</header>
+
+<nav class="site-nav">
+  <a href="/">Zusagen</a>
+  <a href="/wunschliste" class="active">Wunschliste</a>
+</nav>
+
+<main class="container">
+  <h1 class="section-title">Unsere Wunschliste</h1>
+  <p class="section-subtitle">
+    Wenn ihr uns etwas schenken möchtet, findet ihr hier unsere Wünsche.<br>
+    Klickt einfach auf das Geschenk, das ihr übernehmt – damit wir keine Doppelungen haben.
+  </p>
+
+  <div id="alert-area"></div>
+  <div id="gifts-container" class="gifts-grid">
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Lade Geschenke…</p>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  Florian &amp; Sebastian &mdash; Wir freuen uns auf euch!
+</footer>
+
+<script>
+  async function loadGifts() {
+    try {
+      const res = await fetch('/api/gifts');
+      const gifts = await res.json();
+      renderGifts(gifts);
+    } catch {
+      document.getElementById('gifts-container').innerHTML =
+        '<p style="text-align:center;color:var(--text-muted)">Fehler beim Laden der Geschenke.</p>';
+    }
+  }
+
+  function renderGifts(gifts) {
+    const container = document.getElementById('gifts-container');
+    if (gifts.length === 0) {
+      container.innerHTML = '<p style="text-align:center;color:var(--text-muted);grid-column:1/-1">Noch keine Wünsche eingetragen.</p>';
+      return;
+    }
+    container.innerHTML = gifts.map(renderCard).join('');
+  }
+
+  function renderCard(gift) {
+    const claimed = !!gift.claimed;
+    const imgHtml = gift.image_url
+      ? `<img class="gift-card__image" src="${escHtml(gift.image_url)}" alt="${escHtml(gift.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      : '';
+    const placeholderHtml = `<div class="gift-card__image-placeholder" ${gift.image_url ? 'style="display:none"' : ''}></div>`;
+
+    const actionHtml = claimed
+      ? `<span class="claimed-badge">&#10003; Bereits vergeben</span>`
+      : `<button class="btn btn-primary" onclick="claimGift(${gift.id}, this)">Ich schenke das!</button>`;
+
+    const shopHtml = gift.shop_url
+      ? `<a href="${escHtml(gift.shop_url)}" target="_blank" rel="noopener" class="btn btn-secondary" title="Im Shop ansehen">&#8599;</a>`
+      : '';
+
+    return `
+      <div class="gift-card${claimed ? ' claimed' : ''}" id="gift-${gift.id}">
+        ${imgHtml}
+        ${placeholderHtml}
+        <div class="gift-card__body">
+          <div class="gift-card__name">${escHtml(gift.name)}</div>
+          ${gift.description ? `<div class="gift-card__description">${escHtml(gift.description)}</div>` : ''}
+          ${gift.price_range ? `<div class="gift-card__price">${escHtml(gift.price_range)}</div>` : ''}
+        </div>
+        <div class="gift-card__footer">
+          ${actionHtml}
+          ${shopHtml}
+        </div>
+      </div>
+    `;
+  }
+
+  async function claimGift(id, btn) {
+    btn.disabled = true;
+    btn.textContent = '…';
+    try {
+      const res = await fetch(`/api/gifts/${id}/claim`, { method: 'POST' });
+      if (res.ok) {
+        const card = document.getElementById(`gift-${id}`);
+        const footer = card.querySelector('.gift-card__footer');
+        card.classList.add('claimed');
+        footer.innerHTML = `<span class="claimed-badge">&#10003; Bereits vergeben</span>`;
+        showAlert('Danke! Das Geschenk wurde für euch reserviert.', 'success');
+      } else if (res.status === 409) {
+        showAlert('Dieses Geschenk ist leider schon vergeben.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Ich schenke das!';
+        loadGifts();
+      }
+    } catch {
+      showAlert('Etwas ist schiefgelaufen. Bitte versuche es erneut.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Ich schenke das!';
+    }
+  }
+
+  function showAlert(msg, type) {
+    const area = document.getElementById('alert-area');
+    area.innerHTML = `<div class="alert alert-${type}">${escHtml(msg)}</div>`;
+    setTimeout(() => { area.innerHTML = ''; }, 5000);
+  }
+
+  function escHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  loadGifts();
+</script>
+</body>
+</html>

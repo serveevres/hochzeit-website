@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Florian & Sebastian</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .admin-header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .admin-header h1 { font-size: 1.2rem; color: var(--text); font-family: var(--font-serif); }
+    .admin-header span { color: var(--text-muted); font-size: 0.85rem; }
+    .gift-table-image { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; }
+    .actions-cell { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    #edit-modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    #edit-modal-overlay.open { display: flex; }
+    #edit-modal {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      width: 100%;
+      max-width: 520px;
+      margin: 1rem;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    #edit-modal h3 { margin-bottom: 1.5rem; }
+    .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+
+<!-- Login screen -->
+<div id="login-screen">
+  <div class="admin-login">
+    <h2>Admin-Bereich</h2>
+    <p>Florian &amp; Sebastian – Verwaltung</p>
+    <div id="login-alert"></div>
+    <form id="login-form">
+      <div class="form-group">
+        <label for="password">Passwort</label>
+        <input type="password" id="password" autocomplete="current-password" required placeholder="Passwort eingeben">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Anmelden</button>
+    </form>
+  </div>
+</div>
+
+<!-- Admin UI (shown after login) -->
+<div id="admin-screen" style="display:none">
+  <div class="admin-header">
+    <h1>Admin &ndash; Florian &amp; Sebastian</h1>
+    <div>
+      <span id="rsvp-summary"></span>
+      <button class="btn btn-secondary btn-sm" onclick="logout()" style="margin-left:1rem">Abmelden</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="admin-alert"></div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('gifts')">Geschenke</button>
+      <button class="tab-btn" onclick="switchTab('rsvps')">Zusagen</button>
+    </div>
+
+    <!-- GIFTS TAB -->
+    <div id="tab-gifts" class="tab-panel active">
+      <div class="admin-form">
+        <h3>Neues Geschenk hinzufügen</h3>
+        <form id="add-gift-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="g-name">Name *</label>
+              <input type="text" id="g-name" placeholder="z. B. KitchenAid Mixer" required>
+            </div>
+            <div class="form-group">
+              <label for="g-price">Preisrahmen</label>
+              <input type="text" id="g-price" placeholder="z. B. 400 €">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="g-desc">Beschreibung</label>
+            <textarea id="g-desc" rows="2" placeholder="Kurze Beschreibung…"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="g-image">Bild-URL</label>
+              <input type="url" id="g-image" placeholder="https://…">
+            </div>
+            <div class="form-group">
+              <label for="g-shop">Shop-Link</label>
+              <input type="url" id="g-shop" placeholder="https://…">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">+ Geschenk hinzufügen</button>
+        </form>
+      </div>
+
+      <div class="table-wrap">
+        <table id="gifts-table">
+          <thead>
+            <tr>
+              <th>Bild</th>
+              <th>Name</th>
+              <th>Preis</th>
+              <th>Status</th>
+              <th>Aktionen</th>
+            </tr>
+          </thead>
+          <tbody id="gifts-tbody">
+            <tr><td colspan="5" class="loading"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RSVPS TAB -->
+    <div id="tab-rsvps" class="tab-panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem">
+        <div id="rsvp-stats" style="color:var(--text-muted);font-size:0.875rem"></div>
+        <button class="btn btn-secondary btn-sm" onclick="exportRsvpsCsv()">CSV exportieren</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Kommt?</th>
+              <th>Essen / Allergien</th>
+              <th>Nachricht</th>
+              <th>Datum</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="rsvps-tbody">
+            <tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit modal -->
+<div id="edit-modal-overlay">
+  <div id="edit-modal">
+    <h3>Geschenk bearbeiten</h3>
+    <form id="edit-gift-form">
+      <input type="hidden" id="e-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="e-name">Name *</label>
+          <input type="text" id="e-name" required>
+        </div>
+        <div class="form-group">
+          <label for="e-price">Preisrahmen</label>
+          <input type="text" id="e-price">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="e-desc">Beschreibung</label>
+        <textarea id="e-desc" rows="2"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="e-image">Bild-URL</label>
+          <input type="url" id="e-image">
+        </div>
+        <div class="form-group">
+          <label for="e-shop">Shop-Link</label>
+          <input type="url" id="e-shop">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Abbrechen</button>
+        <button type="submit" class="btn btn-primary">Speichern</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/admin.js"></script>
+</body>
+</html>
