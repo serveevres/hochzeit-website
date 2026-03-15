@@ -55,12 +55,14 @@
 
 <script src="/lang.js"></script>
 <script>
-  initLang();
+  let cachedGifts = [];
 
-  // Re-render gift cards when language changes
+  // Re-render gift cards when language changes (called by lang.js)
   function onLangChange() {
     if (cachedGifts.length > 0) renderGifts(cachedGifts);
   }
+
+  initLang();
 
   // ── Session tracking ────────────────────────────────────────
   function getMyClaimedIds() {
@@ -75,8 +77,6 @@
   }
 
   // ── Load & render ────────────────────────────────────────────
-  let cachedGifts = [];
-
   async function loadGifts() {
     try {
       const res = await fetch('/api/gifts');

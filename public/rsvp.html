@@ -82,10 +82,7 @@
             <div class="checkbox-group">
               <label class="checkbox-label">
                 <input type="checkbox" id="friday_evening" name="friday_evening">
-                <span>
-                  <span data-i18n="rsvp.friday">Wir sind bereits am Freitagabend dabei</span>
-                  <span class="field-hint" data-i18n="rsvp.fridayHint">(optional – Details folgen mit der Einladung)</span>
-                </span>
+                <span data-i18n="rsvp.friday">Wir sind bereits am Freitagabend dabei</span>
               </label>
             </div>
           </div>
@@ -95,15 +92,15 @@
               <span data-i18n="rsvp.foodLabel">Essenswünsche / Allergien</span>
               <span class="label-optional" data-i18n="rsvp.foodOptional">(optional)</span>
             </label>
-            <textarea id="food_restrictions" name="food_restrictions"
-              placeholder="z. B. Laktoseintoleranz, Nussallergie …"
-              data-i18n-placeholder="rsvp.foodPlaceholder"></textarea>
-            <div class="checkbox-group" style="margin-top:0.6rem">
+            <div class="checkbox-group" style="margin-bottom:0.6rem">
               <label class="checkbox-label">
                 <input type="checkbox" id="no_allergies">
                 <span data-i18n="rsvp.noAllergies">Keine bekannten Allergien oder Unverträglichkeiten</span>
               </label>
             </div>
+            <textarea id="food_restrictions" name="food_restrictions"
+              placeholder="z. B. Laktoseintoleranz, Nussallergie …"
+              data-i18n-placeholder="rsvp.foodPlaceholder"></textarea>
           </div>
         </div>
 
@@ -112,9 +109,7 @@
             <span data-i18n="rsvp.messageLabel">Nachricht an uns</span>
             <span class="label-optional" data-i18n="rsvp.messageOptional">(optional)</span>
           </label>
-          <textarea id="message" name="message"
-            placeholder="Ein paar liebe Worte für Florian & Sebastian …"
-            data-i18n-placeholder="rsvp.messagePlaceholder"></textarea>
+          <textarea id="message" name="message"></textarea>
         </div>
 
         <button type="submit" class="btn btn-primary" style="width:100%;padding:0.85rem"
