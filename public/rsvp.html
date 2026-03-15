@@ -14,20 +14,22 @@
 </header>
 
 <nav class="site-nav">
-  <a href="/" class="active">Zusagen</a>
-  <a href="/wunschliste">Wunschliste</a>
+  <a href="/" class="active" data-i18n="nav_rsvp">Zusagen</a>
+  <a href="/wunschliste" data-i18n="nav_gifts">Wunschliste</a>
+  <button id="lang-toggle" class="lang-toggle" onclick="toggleLang()">EN</button>
 </nav>
 
 <main class="container">
-  <h1 class="section-title">Eure Zusage</h1>
-  <p class="section-subtitle">Wir freuen uns, wenn ihr uns mitteilt, ob ihr dabei sein könnt!</p>
+  <h1 class="section-title" data-i18n="rsvp.title">Eure Zusage</h1>
+  <p class="section-subtitle" data-i18n="rsvp.subtitle">Sagt uns hier, ob ihr dabei sein könnt und was wir beachten sollen.</p>
 
   <div id="success-view" style="display:none">
     <div class="rsvp-card" style="text-align:center">
       <div style="font-size:2rem;margin-bottom:1rem;color:var(--green)">&#10003;</div>
-      <h2 style="margin-bottom:0.5rem">Vielen Dank!</h2>
-      <p style="color:var(--text-muted);margin-bottom:1.5rem">Eure Nachricht ist bei uns angekommen. Wir freuen uns sehr!</p>
-      <a href="/wunschliste" class="btn btn-primary" style="display:inline-flex">Zur Wunschliste</a>
+      <h2 style="margin-bottom:0.75rem" data-i18n="rsvp.success.title">Vielen Dank!</h2>
+      <p style="color:var(--text-muted);margin-bottom:0.4rem" data-i18n="rsvp.success.line1">Eure Nachricht ist bei uns angekommen.</p>
+      <p style="color:var(--text-muted);margin-bottom:1.5rem" data-i18n="rsvp.success.line2">Wir freuen uns sehr auf euch!</p>
+      <a href="/wunschliste" class="btn btn-primary" style="display:inline-flex" data-i18n="rsvp.success.toGifts">Zur Wunschliste</a>
     </div>
   </div>
 
@@ -37,32 +39,33 @@
 
       <form id="rsvp-form" novalidate>
         <div class="form-group">
-          <label for="name">Euer Name *</label>
-          <input type="text" id="name" name="name" placeholder="z. B. Anna & Max Muster" required autocomplete="name">
+          <label for="name" data-i18n="rsvp.nameLabel">Euer Name *</label>
+          <input type="text" id="name" name="name" placeholder="z. B. Anna & Max Muster"
+            required autocomplete="name" data-i18n-placeholder="rsvp.namePlaceholder">
         </div>
 
         <div class="form-group">
-          <label>Kommt ihr? *</label>
+          <label data-i18n="rsvp.attendingLabel">Kommt ihr? *</label>
           <div class="radio-group">
             <label>
               <input type="radio" name="attending" value="yes" required>
-              <span>Ja, wir kommen!</span>
+              <span data-i18n="rsvp.yes">Ja, wir kommen!</span>
             </label>
             <label>
               <input type="radio" name="attending" value="no">
-              <span>Leider nicht</span>
+              <span data-i18n="rsvp.no">Leider nicht</span>
             </label>
           </div>
         </div>
 
         <div id="attending-fields" style="display:none">
           <div class="form-group">
-            <label for="guest_count">Anzahl Personen *</label>
+            <label for="guest_count" data-i18n="rsvp.guestCount">Anzahl Personen *</label>
             <input type="number" id="guest_count" name="guest_count" min="1" max="20" value="1">
           </div>
 
           <div class="form-group">
-            <label for="children_under3">Davon Kinder unter 3 Jahren</label>
+            <label for="children_under3" data-i18n="rsvp.childrenCount">Davon Kinder unter 3 Jahren</label>
             <input type="number" id="children_under3" name="children_under3" min="0" max="20" value="0">
           </div>
 
@@ -70,7 +73,7 @@
             <div class="checkbox-group">
               <label class="checkbox-label">
                 <input type="checkbox" id="vegetarian" name="vegetarian">
-                <span>Wir essen vegetarisch</span>
+                <span data-i18n="rsvp.vegetarian">Wir essen vegetarisch</span>
               </label>
             </div>
           </div>
@@ -79,23 +82,43 @@
             <div class="checkbox-group">
               <label class="checkbox-label">
                 <input type="checkbox" id="friday_evening" name="friday_evening">
-                <span>Wir sind bereits am Freitagabend dabei</span>
+                <span>
+                  <span data-i18n="rsvp.friday">Wir sind bereits am Freitagabend dabei</span>
+                  <span class="field-hint" data-i18n="rsvp.fridayHint">(optional – Details folgen mit der Einladung)</span>
+                </span>
               </label>
             </div>
           </div>
 
           <div class="form-group">
-            <label for="food_restrictions">Essenswünsche / Allergien <span style="color:var(--text-muted);font-weight:400">(optional)</span></label>
-            <textarea id="food_restrictions" name="food_restrictions" placeholder="z. B. Laktoseintoleranz, Nussallergie …"></textarea>
+            <label for="food_restrictions">
+              <span data-i18n="rsvp.foodLabel">Essenswünsche / Allergien</span>
+              <span class="label-optional" data-i18n="rsvp.foodOptional">(optional)</span>
+            </label>
+            <textarea id="food_restrictions" name="food_restrictions"
+              placeholder="z. B. Laktoseintoleranz, Nussallergie …"
+              data-i18n-placeholder="rsvp.foodPlaceholder"></textarea>
+            <div class="checkbox-group" style="margin-top:0.6rem">
+              <label class="checkbox-label">
+                <input type="checkbox" id="no_allergies">
+                <span data-i18n="rsvp.noAllergies">Keine bekannten Allergien oder Unverträglichkeiten</span>
+              </label>
+            </div>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="message">Nachricht an uns <span style="color:var(--text-muted);font-weight:400">(optional)</span></label>
-          <textarea id="message" name="message" placeholder="Ein paar liebe Worte für Florian & Sebastian …"></textarea>
+          <label for="message">
+            <span data-i18n="rsvp.messageLabel">Nachricht an uns</span>
+            <span class="label-optional" data-i18n="rsvp.messageOptional">(optional)</span>
+          </label>
+          <textarea id="message" name="message"
+            placeholder="Ein paar liebe Worte für Florian & Sebastian …"
+            data-i18n-placeholder="rsvp.messagePlaceholder"></textarea>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width:100%;padding:0.85rem">
+        <button type="submit" class="btn btn-primary" style="width:100%;padding:0.85rem"
+          data-i18n="rsvp.submit">
           Zusage absenden
         </button>
       </form>
@@ -104,11 +127,15 @@
 </main>
 
 <footer class="site-footer">
-  Florian &amp; Sebastian &mdash; Wir freuen uns auf euch!
+  <span data-i18n="footer">Florian &amp; Sebastian &mdash; Wir freuen uns auf euch!</span>
+  &ensp;&middot;&ensp;<a href="/impressum" class="footer-link" data-i18n="nav_impressum">Impressum</a>
 </footer>
 
+<script src="/lang.js"></script>
 <script>
-  // Show/hide attending-specific fields based on radio selection
+  initLang();
+
+  // ── Show/hide attending fields ──────────────────────────────
   function updateAttendingFields() {
     const checked = document.querySelector('input[name="attending"]:checked');
     document.getElementById('attending-fields').style.display =
@@ -118,10 +145,29 @@
     label.addEventListener('click', () => setTimeout(updateAttendingFields, 0));
   });
 
+  // ── Allergie-Toggle ─────────────────────────────────────────
+  const noAllergiesCheck = document.getElementById('no_allergies');
+  const foodTextarea = document.getElementById('food_restrictions');
+
+  noAllergiesCheck.addEventListener('change', () => {
+    if (noAllergiesCheck.checked) {
+      foodTextarea.value = '';
+      foodTextarea.disabled = true;
+    } else {
+      foodTextarea.disabled = false;
+    }
+  });
+
+  foodTextarea.addEventListener('input', () => {
+    if (foodTextarea.value.trim()) noAllergiesCheck.checked = false;
+  });
+
+  // ── Form submit ─────────────────────────────────────────────
   document.getElementById('rsvp-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
     const btn = form.querySelector('button[type="submit"]');
+    const t = translations[currentLang];
 
     const name = form.name.value.trim();
     const attendingVal = form.querySelector('input[name="attending"]:checked')?.value;
@@ -133,12 +179,12 @@
     const food_restrictions = form.food_restrictions.value.trim();
     const message = form.message.value.trim();
 
-    if (!name) return showAlert('Bitte gebt euren Namen ein.', 'error');
-    if (!attendingVal) return showAlert('Bitte wählt aus, ob ihr kommt.', 'error');
-    if (isAttending && guest_count < 1) return showAlert('Bitte gebt die Anzahl der Personen an.', 'error');
+    if (!name) return showAlert(t['rsvp.err.name'], 'error');
+    if (!attendingVal) return showAlert(t['rsvp.err.attending'], 'error');
+    if (isAttending && guest_count < 1) return showAlert(t['rsvp.err.guests'], 'error');
 
     btn.disabled = true;
-    btn.textContent = 'Wird gesendet…';
+    btn.textContent = t['rsvp.sending'];
 
     try {
       const res = await fetch('/api/rsvp', {
@@ -161,14 +207,14 @@
         document.getElementById('success-view').style.display = 'block';
       } else {
         const data = await res.json().catch(() => ({}));
-        showAlert(data.error || 'Etwas ist schiefgelaufen.', 'error');
+        showAlert(data.error || t['rsvp.err.generic'], 'error');
         btn.disabled = false;
-        btn.textContent = 'Zusage absenden';
+        btn.textContent = t['rsvp.submit'];
       }
     } catch {
-      showAlert('Keine Verbindung. Bitte versuche es erneut.', 'error');
+      showAlert(t['rsvp.err.noconn'], 'error');
       btn.disabled = false;
-      btn.textContent = 'Zusage absenden';
+      btn.textContent = t['rsvp.submit'];
     }
   });
 

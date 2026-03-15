@@ -388,6 +388,51 @@ h1, h2, h3 { font-family: var(--font-serif); font-weight: 700; line-height: 1.2;
   font-weight: 600;
 }
 
+/* ── Language toggle ─────────────────────────────────────── */
+.site-nav { position: relative; }
+
+.lang-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.55rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  font-family: var(--font-sans);
+}
+.lang-toggle:hover { color: var(--green); border-color: var(--green); }
+
+/* ── Form helpers ────────────────────────────────────────── */
+.label-optional {
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-left: 0.3rem;
+}
+
+.field-hint {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  margin-top: 0.15rem;
+  font-family: var(--font-sans);
+}
+
+.form-group textarea:disabled {
+  background: var(--cream);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
 /* Checkbox fields */
 .checkbox-group { display: flex; flex-direction: column; gap: 0.5rem; }
 
@@ -555,6 +600,13 @@ tr:hover td { background: var(--cream); }
   border-top: 3px solid var(--yellow);
   margin-top: 3rem;
 }
+
+.footer-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-link:hover { color: var(--green); }
 
 /* ── Loading state ───────────────────────────────────────── */
 .loading {

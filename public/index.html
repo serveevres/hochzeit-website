@@ -14,45 +14,55 @@
 </header>
 
 <nav class="site-nav">
-  <a href="/">Zusagen</a>
-  <a href="/wunschliste" class="active">Wunschliste</a>
+  <a href="/" data-i18n="nav_rsvp">Zusagen</a>
+  <a href="/wunschliste" class="active" data-i18n="nav_gifts">Wunschliste</a>
+  <button id="lang-toggle" class="lang-toggle" onclick="toggleLang()">EN</button>
 </nav>
 
 <main class="container">
-  <h1 class="section-title">Unsere Wunschliste</h1>
+  <h1 class="section-title" data-i18n="gifts.title">Unsere Wunschliste</h1>
   <p class="section-subtitle">
-    Wenn ihr uns etwas schenken möchtet, findet ihr hier unsere Wünsche.<br>
-    Klickt einfach auf das Geschenk, das ihr übernehmt – damit wir keine Doppelungen haben.
+    <span data-i18n="gifts.subtitle1">Wenn ihr uns etwas schenken möchtet, findet ihr hier unsere Wünsche.</span><br>
+    <span data-i18n="gifts.subtitle2">Klickt einfach auf das Geschenk, das ihr übernehmt – damit wir keine Doppelungen haben.</span>
   </p>
 
   <div id="alert-area"></div>
   <div id="gifts-container" class="gifts-grid">
     <div class="loading">
       <div class="spinner"></div>
-      <p>Lade Geschenke…</p>
+      <p data-i18n="gifts.loading">Lade Geschenke…</p>
     </div>
   </div>
 </main>
 
 <footer class="site-footer">
-  Florian &amp; Sebastian &mdash; Wir freuen uns auf euch!
+  <span data-i18n="footer">Florian &amp; Sebastian &mdash; Wir freuen uns auf euch!</span>
+  &ensp;&middot;&ensp;<a href="/impressum" class="footer-link" data-i18n="nav_impressum">Impressum</a>
 </footer>
 
 <!-- Confirmation Modal -->
 <div id="confirm-overlay" class="modal-overlay" role="dialog" aria-modal="true">
   <div class="modal-box">
-    <p class="modal-title">Geschenk reservieren?</p>
+    <p class="modal-title" data-i18n="gifts.modal.title">Geschenk reservieren?</p>
     <p id="confirm-gift-name" class="modal-gift-name"></p>
-    <p class="modal-hint">Das lässt sich innerhalb dieser Sitzung noch rückgängig machen.</p>
+    <p class="modal-hint" data-i18n="gifts.modal.hint">Das lässt sich innerhalb dieser Sitzung noch rückgängig machen.</p>
     <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeConfirm()">Abbrechen</button>
-      <button class="btn btn-primary" onclick="doConfirmClaim()">Ja, ich schenke das!</button>
+      <button class="btn btn-secondary" onclick="closeConfirm()" data-i18n="gifts.modal.cancel">Abbrechen</button>
+      <button class="btn btn-primary" onclick="doConfirmClaim()" data-i18n="gifts.modal.confirm">Ja, ich schenke das!</button>
     </div>
   </div>
 </div>
 
+<script src="/lang.js"></script>
 <script>
-  // ── Session tracking ────────────────────────────────────
+  initLang();
+
+  // Re-render gift cards when language changes
+  function onLangChange() {
+    if (cachedGifts.length > 0) renderGifts(cachedGifts);
+  }
+
+  // ── Session tracking ────────────────────────────────────────
   function getMyClaimedIds() {
     try { return JSON.parse(sessionStorage.getItem('my_claimed_gifts') || '[]'); } catch { return []; }
   }
@@ -64,22 +74,24 @@
     sessionStorage.setItem('my_claimed_gifts', JSON.stringify(getMyClaimedIds().filter(x => x !== id)));
   }
 
-  // ── Load & render ───────────────────────────────────────
+  // ── Load & render ────────────────────────────────────────────
+  let cachedGifts = [];
+
   async function loadGifts() {
     try {
       const res = await fetch('/api/gifts');
-      const gifts = await res.json();
-      renderGifts(gifts);
+      cachedGifts = await res.json();
+      renderGifts(cachedGifts);
     } catch {
       document.getElementById('gifts-container').innerHTML =
-        '<p style="text-align:center;color:var(--text-muted)">Fehler beim Laden der Geschenke.</p>';
+        `<p style="text-align:center;color:var(--text-muted)">${translations[currentLang]['gifts.loadErr']}</p>`;
     }
   }
 
   function renderGifts(gifts) {
     const container = document.getElementById('gifts-container');
     if (gifts.length === 0) {
-      container.innerHTML = '<p style="text-align:center;color:var(--text-muted);grid-column:1/-1">Noch keine Wünsche eingetragen.</p>';
+      container.innerHTML = `<p style="text-align:center;color:var(--text-muted);grid-column:1/-1">${translations[currentLang]['gifts.empty']}</p>`;
       return;
     }
     const myIds = getMyClaimedIds();
@@ -89,6 +101,7 @@
   function renderCard(gift, myIds) {
     const claimed = !!gift.claimed;
     const isMine = myIds.includes(gift.id);
+    const t = translations[currentLang];
 
     const imgHtml = gift.image_url
       ? `<img class="gift-card__image" src="${escHtml(gift.image_url)}" alt="${escHtml(gift.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
@@ -97,17 +110,17 @@
 
     let actionHtml;
     if (!claimed) {
-      actionHtml = `<button class="btn btn-primary" onclick="claimGift(${gift.id})">Ich schenke das!</button>`;
+      actionHtml = `<button class="btn btn-primary" onclick="claimGift(${gift.id})">${escHtml(t['gifts.claim'])}</button>`;
     } else if (isMine) {
       actionHtml = `
-        <span class="claimed-badge claimed-mine">&#10003; Von euch reserviert</span>
-        <button class="btn btn-secondary btn-sm" onclick="unclaimGift(${gift.id})">Aufheben</button>`;
+        <span class="claimed-badge claimed-mine">${escHtml(t['gifts.mine'])}</span>
+        <button class="btn btn-secondary btn-sm" onclick="unclaimGift(${gift.id})">${escHtml(t['gifts.undo'])}</button>`;
     } else {
-      actionHtml = `<span class="claimed-badge">&#10003; Bereits vergeben</span>`;
+      actionHtml = `<span class="claimed-badge">${escHtml(t['gifts.taken'])}</span>`;
     }
 
     const shopHtml = gift.shop_url
-      ? `<a href="${escHtml(gift.shop_url)}" target="_blank" rel="noopener" class="btn btn-secondary" title="Im Shop ansehen">&#8599;</a>`
+      ? `<a href="${escHtml(gift.shop_url)}" target="_blank" rel="noopener" class="btn btn-secondary" title="${escHtml(t['gifts.shopTitle'])}">&#8599;</a>`
       : '';
 
     const cardClasses = ['gift-card', claimed ? 'claimed' : '', isMine ? 'claimed-own' : ''].filter(Boolean).join(' ');
@@ -129,7 +142,7 @@
     `;
   }
 
-  // ── Confirmation modal ──────────────────────────────────
+  // ── Confirmation modal ───────────────────────────────────────
   let pendingClaimId = null;
 
   function claimGift(id) {
@@ -144,12 +157,10 @@
     pendingClaimId = null;
   }
 
-  // Close modal when clicking backdrop
   document.getElementById('confirm-overlay').addEventListener('click', (e) => {
     if (e.target === e.currentTarget) closeConfirm();
   });
 
-  // Close modal with Escape key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeConfirm();
   });
@@ -157,6 +168,7 @@
   async function doConfirmClaim() {
     if (!pendingClaimId) return;
     const id = pendingClaimId;
+    const t = translations[currentLang];
     closeConfirm();
 
     const card = document.getElementById(`gift-${id}`);
@@ -169,24 +181,25 @@
         addMyClaimedId(id);
         updateCardFooter(id, 'mine');
         card.classList.add('claimed', 'claimed-own');
-        showAlert('Danke! Das Geschenk wurde für euch reserviert.', 'success');
+        showAlert(t['gifts.alert.claimed'], 'success');
       } else if (res.status === 409) {
-        showAlert('Dieses Geschenk ist leider schon vergeben.', 'error');
+        showAlert(t['gifts.alert.taken'], 'error');
         loadGifts();
       } else {
-        showAlert('Etwas ist schiefgelaufen. Bitte versuche es erneut.', 'error');
-        if (btn) { btn.disabled = false; btn.textContent = 'Ich schenke das!'; }
+        showAlert(t['gifts.alert.err'], 'error');
+        if (btn) { btn.disabled = false; btn.textContent = t['gifts.claim']; }
       }
     } catch {
-      showAlert('Etwas ist schiefgelaufen. Bitte versuche es erneut.', 'error');
-      if (btn) { btn.disabled = false; btn.textContent = 'Ich schenke das!'; }
+      showAlert(t['gifts.alert.err'], 'error');
+      if (btn) { btn.disabled = false; btn.textContent = t['gifts.claim']; }
     }
   }
 
-  // ── Undo claiming ───────────────────────────────────────
+  // ── Undo claiming ────────────────────────────────────────────
   async function unclaimGift(id) {
     const card = document.getElementById(`gift-${id}`);
     const btn = card?.querySelector('.btn-secondary.btn-sm');
+    const t = translations[currentLang];
     if (btn) { btn.disabled = true; btn.textContent = '…'; }
 
     try {
@@ -195,38 +208,39 @@
         removeMyClaimedId(id);
         card.classList.remove('claimed', 'claimed-own');
         updateCardFooter(id, 'free', await res.json());
-        showAlert('Reservierung aufgehoben.', 'success');
+        showAlert(t['gifts.alert.unclaimed'], 'success');
       } else {
-        showAlert('Aufheben nicht möglich. Bitte versuche es erneut.', 'error');
-        if (btn) { btn.disabled = false; btn.textContent = 'Aufheben'; }
+        showAlert(t['gifts.alert.unclaimErr'], 'error');
+        if (btn) { btn.disabled = false; btn.textContent = t['gifts.undo']; }
       }
     } catch {
-      showAlert('Etwas ist schiefgelaufen. Bitte versuche es erneut.', 'error');
-      if (btn) { btn.disabled = false; btn.textContent = 'Aufheben'; }
+      showAlert(t['gifts.alert.err'], 'error');
+      if (btn) { btn.disabled = false; btn.textContent = t['gifts.undo']; }
     }
   }
 
-  function updateCardFooter(id, state, gift) {
+  function updateCardFooter(id, state) {
     const card = document.getElementById(`gift-${id}`);
     if (!card) return;
     const footer = card.querySelector('.gift-card__footer');
     const shopUrl = card.dataset.shop;
+    const t = translations[currentLang];
     const shopHtml = shopUrl
-      ? `<a href="${escHtml(shopUrl)}" target="_blank" rel="noopener" class="btn btn-secondary" title="Im Shop ansehen">&#8599;</a>`
+      ? `<a href="${escHtml(shopUrl)}" target="_blank" rel="noopener" class="btn btn-secondary" title="${escHtml(t['gifts.shopTitle'])}">&#8599;</a>`
       : '';
 
     if (state === 'mine') {
       footer.innerHTML = `
-        <span class="claimed-badge claimed-mine">&#10003; Von euch reserviert</span>
-        <button class="btn btn-secondary btn-sm" onclick="unclaimGift(${id})">Aufheben</button>`;
+        <span class="claimed-badge claimed-mine">${escHtml(t['gifts.mine'])}</span>
+        <button class="btn btn-secondary btn-sm" onclick="unclaimGift(${id})">${escHtml(t['gifts.undo'])}</button>`;
     } else if (state === 'free') {
-      footer.innerHTML = `<button class="btn btn-primary" onclick="claimGift(${id})">Ich schenke das!</button>${shopHtml}`;
+      footer.innerHTML = `<button class="btn btn-primary" onclick="claimGift(${id})">${escHtml(t['gifts.claim'])}</button>${shopHtml}`;
     } else {
-      footer.innerHTML = `<span class="claimed-badge">&#10003; Bereits vergeben</span>`;
+      footer.innerHTML = `<span class="claimed-badge">${escHtml(t['gifts.taken'])}</span>`;
     }
   }
 
-  // ── Helpers ─────────────────────────────────────────────
+  // ── Helpers ──────────────────────────────────────────────────
   function showAlert(msg, type) {
     const area = document.getElementById('alert-area');
     area.innerHTML = `<div class="alert alert-${type}">${escHtml(msg)}</div>`;
