@@ -136,7 +136,7 @@
         </div>
         <div class="gift-card__footer">
           ${actionHtml}
-          ${!claimed ? shopHtml : ''}
+          ${shopHtml}
         </div>
       </div>
     `;
@@ -236,7 +236,7 @@
     } else if (state === 'free') {
       footer.innerHTML = `<button class="btn btn-primary" onclick="claimGift(${id})">${escHtml(t['gifts.claim'])}</button>${shopHtml}`;
     } else {
-      footer.innerHTML = `<span class="claimed-badge">${escHtml(t['gifts.taken'])}</span>`;
+      footer.innerHTML = `<span class="claimed-badge">${escHtml(t['gifts.taken'])}</span>${shopHtml}`;
     }
   }
 
