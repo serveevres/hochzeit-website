@@ -35,7 +35,7 @@ const translations = {
     'rsvp.success.waDesc': 'Tritt der Gruppe bei, um euch mit anderen Eltern bei der Feier abzustimmen.',
     'rsvp.success.waBtn': 'WhatsApp-Gruppe beitreten',
     'wa.title': 'Eltern-WhatsApp-Gruppe',
-    'wa.desc': 'Für alle Eltern, die sich bei der Feier absprechen möchten – tritt gerne der WhatsApp-Gruppe bei.',
+    'wa.desc': 'Für alle Eltern, die sich bei der Feier absprechen möchten – tretet gerne der WhatsApp-Gruppe bei.',
     'wa.btn': 'Gruppe beitreten',
     'rsvp.err.name': 'Bitte gebt euren Namen ein.',
     'rsvp.err.attending': 'Bitte w\u00e4hlt aus, ob ihr kommt.',

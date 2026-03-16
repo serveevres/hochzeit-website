@@ -120,22 +120,20 @@
           <textarea id="message" name="message"></textarea>
         </div>
 
+        <div id="wa-attending" class="wa-card" style="display:none;margin-bottom:1.25rem">
+          <div class="wa-card__icon">💬</div>
+          <div>
+            <div class="wa-card__title" data-i18n="wa.title">Eltern-WhatsApp-Gruppe</div>
+            <div class="wa-card__desc" data-i18n="wa.desc">Für alle Eltern, die sich bei der Feier absprechen möchten – tretet gerne der WhatsApp-Gruppe bei.</div>
+          </div>
+          <a href="https://chat.whatsapp.com/E4wZVpy4Onj4B4VKFdyOfo?mode=gi_t" target="_blank" rel="noopener" class="btn btn-whatsapp" data-i18n="wa.btn">Gruppe beitreten</a>
+        </div>
+
         <button type="submit" class="btn btn-primary" style="width:100%;padding:0.85rem"
           data-i18n="rsvp.submit">
           Zusage absenden
         </button>
       </form>
-    </div>
-  </div>
-
-  <div class="wa-section">
-    <div class="wa-card">
-      <div class="wa-card__icon">💬</div>
-      <div>
-        <div class="wa-card__title" data-i18n="wa.title">Eltern-WhatsApp-Gruppe</div>
-        <div class="wa-card__desc" data-i18n="wa.desc">Für alle Eltern, die sich bei der Feier absprechen möchten – tritt gerne der WhatsApp-Gruppe bei.</div>
-      </div>
-      <a href="https://chat.whatsapp.com/E4wZVpy4Onj4B4VKFdyOfo?mode=gi_t" target="_blank" rel="noopener" class="btn btn-whatsapp" data-i18n="wa.btn">Gruppe beitreten</a>
     </div>
   </div>
 </main>
@@ -152,8 +150,9 @@
   // ── Show/hide attending fields ──────────────────────────────
   function updateAttendingFields() {
     const checked = document.querySelector('input[name="attending"]:checked');
-    document.getElementById('attending-fields').style.display =
-      checked?.value === 'yes' ? 'block' : 'none';
+    const show = checked?.value === 'yes';
+    document.getElementById('attending-fields').style.display = show ? 'block' : 'none';
+    document.getElementById('wa-attending').style.display = show ? 'flex' : 'none';
   }
   document.querySelectorAll('.radio-group label').forEach(label => {
     label.addEventListener('click', () => setTimeout(updateAttendingFields, 0));
