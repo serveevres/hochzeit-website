@@ -99,6 +99,7 @@ function renderGiftsTable(gifts) {
       </td>
       <td class="actions-cell">
         <button class="btn btn-secondary btn-sm" onclick="openEditModal(${g.id})">Bearbeiten</button>
+        <button class="btn btn-secondary btn-sm" onclick="duplicateGift(${g.id})">Duplizieren</button>
         ${!g.unclaimable && g.claimed
           ? `<button class="btn btn-secondary btn-sm" onclick="unclaimGift(${g.id})">Freigeben</button>`
           : ''}
@@ -193,6 +194,41 @@ async function deleteGift(id) {
     showAdminAlert('Geschenk gelöscht.', 'success');
     loadGifts();
   }
+}
+
+async function duplicateGift(id) {
+  const res = await authApi('/api/admin/gifts');
+  if (!res) return;
+  const gifts = await res.json();
+  const g = gifts.find(x => x.id === id);
+  if (!g) return;
+
+  const input = prompt('Wie viele Kopien erstellen?', '1');
+  if (input === null) return;
+  const count = parseInt(input, 10);
+  if (!count || count < 1 || count > 50) { showAdminAlert('Ungültige Anzahl (1–50).', 'error'); return; }
+
+  const body = {
+    name: g.name,
+    description: g.description || '',
+    price_range: g.price_range || '',
+    image_url: g.image_url || '',
+    shop_url: g.shop_url || '',
+    unclaimable: !!g.unclaimable,
+  };
+
+  let failed = 0;
+  for (let i = 0; i < count; i++) {
+    const r = await authApi('/api/admin/gifts', 'POST', body);
+    if (!r || !r.ok) failed++;
+  }
+
+  if (failed === 0) {
+    showAdminAlert(`${count} Kopie${count > 1 ? 'n' : ''} erstellt.`, 'success');
+  } else {
+    showAdminAlert(`${count - failed} von ${count} Kopien erstellt.`, 'error');
+  }
+  loadGifts();
 }
 
 async function unclaimGift(id) {
