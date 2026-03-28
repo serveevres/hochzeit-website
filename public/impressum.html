@@ -14,8 +14,11 @@
 </header>
 
 <nav class="site-nav">
-  <a href="/">Zusagen</a>
-  <a href="/wunschliste">Wunschliste</a>
+  <a href="/" data-i18n="nav_rsvp">Zusagen</a>
+  <a href="/wunschliste" data-i18n="nav_gifts">Wunschliste</a>
+  <a href="/informationen" data-i18n="nav_info">Infos</a>
+  <a href="/kontakt" data-i18n="nav_contact">Kontakt</a>
+  <button id="lang-toggle" class="lang-toggle" onclick="toggleLang()">EN</button>
 </nav>
 
 <main class="container">
@@ -46,5 +49,7 @@
   &ensp;&middot;&ensp;<a href="/impressum" class="footer-link">Impressum</a>
 </footer>
 
+<script src="/lang.js"></script>
+<script>initLang();</script>
 </body>
 </html>

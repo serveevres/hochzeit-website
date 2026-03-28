@@ -17,6 +17,8 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'rsvp.htm
 app.get('/wunschliste', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
 app.get('/impressum', (req, res) => res.sendFile(path.join(__dirname, 'public', 'impressum.html')));
+app.get('/informationen', (req, res) => res.sendFile(path.join(__dirname, 'public', 'informationen.html')));
+app.get('/kontakt', (req, res) => res.sendFile(path.join(__dirname, 'public', 'kontakt.html')));
 
 app.use(express.static(path.join(__dirname, 'public')));
 

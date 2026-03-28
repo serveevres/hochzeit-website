@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Florian & Sebastian – Weitere Informationen</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="couple">Florian &amp; Sebastian</div>
+  <div class="date">— Unsere Hochzeit —</div>
+</header>
+
+<nav class="site-nav">
+  <a href="/" data-i18n="nav_rsvp">Zusagen</a>
+  <a href="/wunschliste" data-i18n="nav_gifts">Wunschliste</a>
+  <a href="/informationen" class="active" data-i18n="nav_info">Infos</a>
+  <a href="/kontakt" data-i18n="nav_contact">Kontakt</a>
+  <button id="lang-toggle" class="lang-toggle" onclick="toggleLang()">EN</button>
+</nav>
+
+<main class="container" style="max-width:860px">
+  <h1 class="section-title" data-i18n="info.title">Weitere Informationen</h1>
+  <p class="section-subtitle" data-i18n="info.subtitle">Alles, was ihr für die Feier wissen müsst.</p>
+
+  <!-- 1. Programm -->
+  <section class="info-section">
+    <h2 class="info-section-title" data-i18n="info.program.title">Programm</h2>
+
+    <!-- Freitag -->
+    <div class="event-card">
+      <div>
+        <span class="event-day fri" data-i18n="info.fri.date">Freitag, 24. Juli 2026</span>
+      </div>
+      <div>
+        <div class="event-time" data-i18n="info.fri.time">ab 18:00 Uhr</div>
+        <div class="event-name" data-i18n="info.fri.name">Biergarten-Abend</div>
+        <div class="event-loc" data-i18n="info.fri.loc">Rebgut Haltnau, Hagnauer Str. 27, 88709 Meersburg</div>
+        <div class="event-note" data-i18n="info.fri.note">Lockeres Kommen und Gehen, kein fester Beginn.</div>
+      </div>
+    </div>
+
+    <!-- Samstag: Trauung -->
+    <div class="event-card">
+      <div>
+        <span class="event-day sat" data-i18n="info.sat1.date">Samstag, 25. Juli 2026</span>
+      </div>
+      <div>
+        <div class="event-time" data-i18n="info.sat1.time">11:00 Uhr</div>
+        <div class="event-name" data-i18n="info.sat1.name">Trauung</div>
+        <div class="event-loc" data-i18n="info.sat1.loc">Schlosskirche Meersburg, Schlossplatz, 88709 Meersburg</div>
+        <div class="event-note" data-i18n="info.sat1.note">Bitte bis 10:45 Uhr vor Ort sein.</div>
+      </div>
+    </div>
+
+    <!-- Samstag: Sektempfang -->
+    <div class="event-card">
+      <div>
+        <span class="event-day sat" data-i18n="info.sat1.date">Samstag, 25. Juli 2026</span>
+      </div>
+      <div>
+        <div class="event-time" data-i18n="info.sat2.time">ca. 12:00–14:00 Uhr</div>
+        <div class="event-name" data-i18n="info.sat2.name">Sektempfang</div>
+        <div class="event-loc" data-i18n="info.sat2.loc">Aussichtspunkt Känzele, Meersburg</div>
+        <div class="event-note" data-i18n="info.sat2.note">Zu Fuß von der Schlosskirche erreichbar. Veranstaltung im Freien – Sonnenschutz (LSF) empfohlen.</div>
+      </div>
+    </div>
+
+    <!-- Samstag: Abendfeier -->
+    <div class="event-card">
+      <div>
+        <span class="event-day sat" data-i18n="info.sat1.date">Samstag, 25. Juli 2026</span>
+      </div>
+      <div>
+        <div class="event-time" data-i18n="info.sat3.time">ab 17:00 Uhr</div>
+        <div class="event-name" data-i18n="info.sat3.name">Abendfeier</div>
+        <div class="event-loc" data-i18n="info.sat3.loc">Badhäusle, Unteruhldingerstraße 51, 88709 Meersburg (Uhldingen-Mühlhofen)</div>
+        <div class="event-note" data-i18n="info.sat3.note">Aperitif, Abendessen, Tanz. Gartenveranstaltung – bei der Schuhwahl Rasen beachten. Ab ca. 23:00 Uhr Shuttle nach Meersburg und Uhldingen.</div>
+      </div>
+    </div>
+
+    <!-- Sonntag -->
+    <div class="event-card">
+      <div>
+        <span class="event-day sun" data-i18n="info.sun.date">Sonntag, 26. Juli 2026</span>
+      </div>
+      <div>
+        <div class="event-time" data-i18n="info.sun.time">ab 11:00 Uhr</div>
+        <div class="event-name" data-i18n="info.sun.name">Coffee & Goodbye</div>
+        <div class="event-loc" data-i18n="info.sun.loc">Ort wird noch bekanntgegeben</div>
+        <div class="event-note" data-i18n="info.sun.note">Kommen und Gehen, kein festes Ende.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Locations -->
+  <section class="info-section">
+    <h2 class="info-section-title" data-i18n="info.locations.title">Locations</h2>
+    <div class="location-grid">
+
+      <div class="location-card">
+        <div class="location-card__name" data-i18n="info.loc.haltnau.name">Rebgut Haltnau</div>
+        <div class="location-card__desc" data-i18n="info.loc.haltnau.desc">Weingut mit Biergarten direkt am Bodensee.</div>
+        <div class="location-card__addr" data-i18n="info.loc.haltnau.addr">Hagnauer Str. 27, 88709 Meersburg</div>
+        <div class="location-card__footer">
+          <a href="https://maps.google.com/?q=Hagnauer+Str.+27,+88709+Meersburg" target="_blank" rel="noopener" class="btn-maps" data-i18n="info.mapsBtn">Google Maps ↗</a>
+        </div>
+      </div>
+
+      <div class="location-card">
+        <div class="location-card__name" data-i18n="info.loc.kirche.name">Schlosskirche Meersburg</div>
+        <div class="location-card__desc" data-i18n="info.loc.kirche.desc">Historische Kirche am Schlossplatz im Herzen Meersburgs.</div>
+        <div class="location-card__addr" data-i18n="info.loc.kirche.addr">Schlossplatz, 88709 Meersburg</div>
+        <div class="location-card__footer">
+          <a href="https://maps.google.com/?q=Schlosskirche+Meersburg,+Schlossplatz,+88709+Meersburg" target="_blank" rel="noopener" class="btn-maps" data-i18n="info.mapsBtn">Google Maps ↗</a>
+        </div>
+      </div>
+
+      <div class="location-card">
+        <div class="location-card__name" data-i18n="info.loc.kaenzele.name">Aussichtspunkt Känzele</div>
+        <div class="location-card__desc" data-i18n="info.loc.kaenzele.desc">Aussichtspunkt beim Staatsweingut, zu Fuß von der Schlosskirche erreichbar.</div>
+        <div class="location-card__addr" data-i18n="info.loc.kaenzele.addr">beim Staatsweingut, Seminarstraße 6, 88709 Meersburg</div>
+        <div class="location-card__footer">
+          <a href="https://maps.google.com/?q=Staatsweingut+Meersburg,+Seminarstra%C3%9Fe+6,+88709+Meersburg" target="_blank" rel="noopener" class="btn-maps" data-i18n="info.mapsBtn">Google Maps ↗</a>
+        </div>
+      </div>
+
+      <div class="location-card">
+        <div class="location-card__name" data-i18n="info.loc.badh.name">Badhäusle</div>
+        <div class="location-card__desc" data-i18n="info.loc.badh.desc">Veranstaltungslocation mit Garten in Uhldingen-Mühlhofen.</div>
+        <div class="location-card__addr" data-i18n="info.loc.badh.addr">Unteruhldingerstraße 51, 88709 Meersburg (Uhldingen-Mühlhofen)</div>
+        <div class="location-card__footer">
+          <a href="https://maps.google.com/?q=Unteruhldingerstra%C3%9Fe+51,+88709+Meersburg" target="_blank" rel="noopener" class="btn-maps" data-i18n="info.mapsBtn">Google Maps ↗</a>
+        </div>
+      </div>
+
+      <div class="location-card">
+        <div class="location-card__name" data-i18n="info.loc.park.name">Parkhaus Fähre Meersburg</div>
+        <div class="location-card__desc" data-i18n="info.loc.park.desc">Empfohlenes Parkhaus für Gäste mit PKW. Von dort mit Bus 7395 weiterfahren.</div>
+        <div class="location-card__addr" data-i18n="info.loc.park.addr">Hafenstraße, 88709 Meersburg</div>
+        <div class="location-card__footer">
+          <a href="https://maps.google.com/?q=Parkhaus+F%C3%A4hre+Meersburg" target="_blank" rel="noopener" class="btn-maps" data-i18n="info.mapsBtn">Google Maps ↗</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. Anreise & ÖPNV -->
+  <section class="info-section">
+    <h2 class="info-section-title" data-i18n="info.transport.title">Anreise & ÖPNV</h2>
+    <div class="info-card">
+      <div class="info-row">
+        <div class="info-row__label" data-i18n="info.transport.bus">Seelinie Bus 7395</div>
+        <div class="info-row__value" data-i18n="info.transport.busDesc">Verbindet Friedrichshafen – Meersburg – Überlingen, fährt auch am Wochenende.</div>
+      </div>
+      <div class="info-row">
+        <div class="info-row__label" data-i18n="info.transport.stop">Haltestelle zur Abendfeier</div>
+        <div class="info-row__value" data-i18n="info.transport.stopDesc">„Gehauweg" (Unteruhldingerstraße) – ca. 2 Gehminuten zum Badhäusle.</div>
+      </div>
+      <div class="info-row">
+        <div class="info-row__label" data-i18n="info.transport.plan">Fahrplan</div>
+        <div class="info-row__value" data-i18n="info.transport.planDesc">bodo.de oder DB Navigator App (Ziel: „Meersburg, Gehauweg").</div>
+      </div>
+      <div class="info-row">
+        <div class="info-row__label" data-i18n="info.transport.train">Nächste Bahnhöfe</div>
+        <div class="info-row__value" data-i18n="info.transport.trainDesc">Friedrichshafen (ca. 25 Min. mit Bus 7395) oder Überlingen (ca. 30 Min.). Von Konstanz per Autofähre nach Meersburg (ca. 15 Min.).</div>
+      </div>
+      <div class="info-row">
+        <div class="info-row__label" data-i18n="info.transport.car">Mit dem Auto</div>
+        <div class="info-row__value" data-i18n="info.transport.carDesc">Bitte nach Möglichkeit vermeiden, insbesondere zur Abendfeier. Empfehlung: Parkhaus an der Fähre Meersburg, von dort mit Bus 7395 weiterfahren.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Shuttle -->
+  <section class="info-section">
+    <h2 class="info-section-title" data-i18n="info.shuttle.title">Shuttle-Service</h2>
+    <div class="info-card">
+      <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.6" data-i18n="info.shuttle.desc">
+        Ab ca. 23:00 Uhr fährt ein Shuttle von der Abendfeier (Badhäusle) zurück nach Meersburg und Uhldingen. Details folgen.
+      </p>
+    </div>
+  </section>
+
+  <!-- 5. Dresscode -->
+  <section class="info-section">
+    <h2 class="info-section-title" data-i18n="info.dress.title">Dresscode & Hinweise</h2>
+    <div class="info-card">
+      <div class="info-row">
+        <div class="info-row__label" data-i18n="info.dress.lawn">Gartenveranstaltung</div>
+        <div class="info-row__value" data-i18n="info.dress.lawnDesc">Die Abendfeier findet im Garten statt. Festes Schuhwerk empfohlen, da teilweise Rasen.</div>
+      </div>
+      <div class="info-row">
+        <div class="info-row__label" data-i18n="info.dress.sun">Sektempfang im Freien</div>
+        <div class="info-row__value" data-i18n="info.dress.sunDesc">Sonnenschutz (LSF) mitbringen.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. FAQ -->
+  <section class="info-section">
+    <h2 class="info-section-title" data-i18n="info.faq.title">FAQ</h2>
+    <div class="info-card">
+      <div class="faq-item">
+        <div class="faq-q" data-i18n="info.faq.q1">Gibt es Parkplätze direkt bei der Abendveranstaltung?</div>
+        <div class="faq-a" data-i18n="info.faq.a1">Nein. Bitte das Parkhaus Fähre Meersburg nutzen und von dort mit Bus 7395 weiterfahren.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-i18n="info.faq.q2">Wie komme ich ohne Auto zur Abendfeier?</div>
+        <div class="faq-a" data-i18n="info.faq.a2">Mit Bus 7395, Haltestelle „Gehauweg" – ca. 2 Gehminuten zum Badhäusle.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-i18n="info.faq.q3">Gibt es einen Shuttle zurück?</div>
+        <div class="faq-a" data-i18n="info.faq.a3">Ja, ab ca. 23:00 Uhr nach Meersburg und Uhldingen. Details folgen.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-i18n="info.faq.q4">An wen kann ich mich bei Fragen wenden?</div>
+        <div class="faq-a" data-i18n="info.faq.a4">An die Trauzeugen – alle Kontaktdaten findet ihr auf der Kontaktseite.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <span data-i18n="footer">Florian &amp; Sebastian &mdash; Wir freuen uns auf euch!</span>
+  &ensp;&middot;&ensp;<a href="/impressum" class="footer-link" data-i18n="nav_impressum">Impressum</a>
+</footer>
+
+<script src="/lang.js"></script>
+<script>initLang();</script>
+</body>
+</html>
