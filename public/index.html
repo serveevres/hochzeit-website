@@ -25,7 +25,8 @@
   <h1 class="section-title" data-i18n="gifts.title">Unsere Wunschliste</h1>
   <p class="section-subtitle">
     <span data-i18n="gifts.subtitle1">Wenn ihr uns etwas schenken möchtet, findet ihr hier unsere Wünsche.</span><br>
-    <span data-i18n="gifts.subtitle2">Klickt einfach auf das Geschenk, das ihr übernehmt – damit wir keine Doppelungen haben.</span>
+    <span data-i18n="gifts.subtitle2">Klickt einfach auf das Geschenk, das ihr übernehmt – damit wir keine Doppelungen haben.</span><br>
+    <span data-i18n="gifts.subtitle3" style="font-style:italic">Geschenke sind übrigens keine Bedingung – mit eurem Kommen habt ihr uns schon glücklich gemacht.</span>
   </p>
 
   <div id="alert-area"></div>
@@ -111,7 +112,9 @@
     const placeholderHtml = `<div class="gift-card__image-placeholder" ${gift.image_url ? 'style="display:none"' : ''}></div>`;
 
     let actionHtml;
-    if (!claimed) {
+    if (gift.unclaimable) {
+      actionHtml = `<span class="claimed-badge" style="background:var(--gold-light,#fef9ec);color:var(--gold,#b8983e);border:1px solid var(--gold,#b8983e)">${escHtml(t['gifts.open'])}</span>`;
+    } else if (!claimed) {
       actionHtml = `<button class="btn btn-primary" onclick="claimGift(${gift.id})">${escHtml(t['gifts.claim'])}</button>`;
     } else if (isMine) {
       actionHtml = `
@@ -125,7 +128,7 @@
       ? `<a href="${escHtml(gift.shop_url)}" target="_blank" rel="noopener" class="btn btn-secondary" title="${escHtml(t['gifts.shopTitle'])}">&#8599;</a>`
       : '';
 
-    const cardClasses = ['gift-card', claimed ? 'claimed' : '', isMine ? 'claimed-own' : ''].filter(Boolean).join(' ');
+    const cardClasses = ['gift-card', (!gift.unclaimable && claimed) ? 'claimed' : '', isMine ? 'claimed-own' : ''].filter(Boolean).join(' ');
 
     return `
       <div class="${cardClasses}" id="gift-${gift.id}" data-shop="${escHtml(gift.shop_url || '')}">

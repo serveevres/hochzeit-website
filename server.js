@@ -46,6 +46,7 @@ app.get('/api/gifts', (req, res) => {
 app.post('/api/gifts/:id/claim', (req, res) => {
   const gift = db.getGiftById(req.params.id);
   if (!gift) return res.status(404).json({ error: 'Geschenk nicht gefunden' });
+  if (gift.unclaimable) return res.status(409).json({ error: 'Dieses Geschenk kann nicht reserviert werden' });
   if (gift.claimed) return res.status(409).json({ error: 'Bereits vergeben' });
   res.json(db.claimGift(req.params.id));
 });
@@ -106,22 +107,22 @@ app.get('/api/admin/gifts', requireAdmin, (req, res) => {
 });
 
 app.post('/api/admin/gifts', requireAdmin, (req, res) => {
-  const { name, description, price_range, image_url, shop_url } = req.body;
+  const { name, description, price_range, image_url, shop_url, unclaimable } = req.body;
   if (!name || typeof name !== 'string' || name.trim().length === 0) {
     return res.status(400).json({ error: 'Name ist erforderlich' });
   }
-  const gift = db.addGift({ name: name.trim(), description, price_range, image_url, shop_url });
+  const gift = db.addGift({ name: name.trim(), description, price_range, image_url, shop_url, unclaimable });
   res.status(201).json(gift);
 });
 
 app.put('/api/admin/gifts/:id', requireAdmin, (req, res) => {
   const gift = db.getGiftById(req.params.id);
   if (!gift) return res.status(404).json({ error: 'Geschenk nicht gefunden' });
-  const { name, description, price_range, image_url, shop_url } = req.body;
+  const { name, description, price_range, image_url, shop_url, unclaimable } = req.body;
   if (!name || typeof name !== 'string' || name.trim().length === 0) {
     return res.status(400).json({ error: 'Name ist erforderlich' });
   }
-  res.json(db.updateGift(req.params.id, { name: name.trim(), description, price_range, image_url, shop_url }));
+  res.json(db.updateGift(req.params.id, { name: name.trim(), description, price_range, image_url, shop_url, unclaimable }));
 });
 
 app.delete('/api/admin/gifts/:id', requireAdmin, (req, res) => {

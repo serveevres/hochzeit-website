@@ -13,6 +13,7 @@ db.exec(`
     image_url TEXT,
     shop_url TEXT,
     claimed INTEGER NOT NULL DEFAULT 0,
+    unclaimable INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
 
@@ -39,6 +40,7 @@ db.exec(`
 ].forEach(col => {
   try { db.exec(`ALTER TABLE rsvps ADD COLUMN ${col}`); } catch {}
 });
+try { db.exec('ALTER TABLE gifts ADD COLUMN unclaimable INTEGER NOT NULL DEFAULT 0'); } catch {}
 
 module.exports = {
   getAllGifts() {
@@ -49,18 +51,18 @@ module.exports = {
     return db.prepare('SELECT * FROM gifts WHERE id = ?').get(id);
   },
 
-  addGift({ name, description, price_range, image_url, shop_url }) {
+  addGift({ name, description, price_range, image_url, shop_url, unclaimable }) {
     const stmt = db.prepare(
-      'INSERT INTO gifts (name, description, price_range, image_url, shop_url) VALUES (?, ?, ?, ?, ?)'
+      'INSERT INTO gifts (name, description, price_range, image_url, shop_url, unclaimable) VALUES (?, ?, ?, ?, ?, ?)'
     );
-    const result = stmt.run(name, description || null, price_range || null, image_url || null, shop_url || null);
+    const result = stmt.run(name, description || null, price_range || null, image_url || null, shop_url || null, unclaimable ? 1 : 0);
     return db.prepare('SELECT * FROM gifts WHERE id = ?').get(result.lastInsertRowid);
   },
 
-  updateGift(id, { name, description, price_range, image_url, shop_url }) {
+  updateGift(id, { name, description, price_range, image_url, shop_url, unclaimable }) {
     db.prepare(
-      'UPDATE gifts SET name = ?, description = ?, price_range = ?, image_url = ?, shop_url = ? WHERE id = ?'
-    ).run(name, description || null, price_range || null, image_url || null, shop_url || null, id);
+      'UPDATE gifts SET name = ?, description = ?, price_range = ?, image_url = ?, shop_url = ?, unclaimable = ? WHERE id = ?'
+    ).run(name, description || null, price_range || null, image_url || null, shop_url || null, unclaimable ? 1 : 0, id);
     return db.prepare('SELECT * FROM gifts WHERE id = ?').get(id);
   },
 

@@ -91,13 +91,15 @@ function renderGiftsTable(gifts) {
       </td>
       <td>${g.price_range ? esc(g.price_range) : '&#8212;'}</td>
       <td>
-        ${g.claimed
-          ? '<span class="badge badge-claimed">Vergeben</span>'
-          : '<span class="badge badge-free">Frei</span>'}
+        ${g.unclaimable
+          ? '<span class="badge" style="background:var(--gold);color:#fff">Nicht belegbar</span>'
+          : g.claimed
+            ? '<span class="badge badge-claimed">Vergeben</span>'
+            : '<span class="badge badge-free">Frei</span>'}
       </td>
       <td class="actions-cell">
         <button class="btn btn-secondary btn-sm" onclick="openEditModal(${g.id})">Bearbeiten</button>
-        ${g.claimed
+        ${!g.unclaimable && g.claimed
           ? `<button class="btn btn-secondary btn-sm" onclick="unclaimGift(${g.id})">Freigeben</button>`
           : ''}
         <button class="btn btn-danger btn-sm" onclick="deleteGift(${g.id})">Löschen</button>
@@ -117,6 +119,7 @@ async function handleAddGift(e) {
     price_range: document.getElementById('g-price').value.trim(),
     image_url: document.getElementById('g-image').value.trim(),
     shop_url: document.getElementById('g-shop').value.trim(),
+    unclaimable: document.getElementById('g-unclaimable').checked,
   };
 
   const res = await authApi('/api/admin/gifts', 'POST', body);
@@ -148,6 +151,7 @@ async function openEditModal(id) {
   document.getElementById('e-desc').value = g.description || '';
   document.getElementById('e-image').value = g.image_url || '';
   document.getElementById('e-shop').value = g.shop_url || '';
+  document.getElementById('e-unclaimable').checked = !!g.unclaimable;
   document.getElementById('edit-modal-overlay').classList.add('open');
 }
 
@@ -167,6 +171,7 @@ async function handleEditGift(e) {
     price_range: document.getElementById('e-price').value.trim(),
     image_url: document.getElementById('e-image').value.trim(),
     shop_url: document.getElementById('e-shop').value.trim(),
+    unclaimable: document.getElementById('e-unclaimable').checked,
   };
 
   const res = await authApi(`/api/admin/gifts/${id}`, 'PUT', body);
