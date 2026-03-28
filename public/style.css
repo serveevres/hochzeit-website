@@ -806,6 +806,7 @@ tr:hover td { background: var(--cream); }
   transition: background 0.15s, color 0.15s;
 }
 .btn-maps:hover { background: var(--green); color: var(--white); }
+.event-maps { margin: 0.2rem 0 0.4rem; }
 
 .info-card {
   background: var(--white);
