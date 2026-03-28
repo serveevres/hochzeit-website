@@ -48,7 +48,7 @@ const translations = {
     'gifts.title': 'Unsere Wunschliste',
     'gifts.subtitle1': 'Wenn ihr uns etwas schenken m\u00f6chtet, findet ihr hier unsere W\u00fcnsche.',
     'gifts.subtitle2': 'Klickt einfach auf das Geschenk, das ihr \u00fcbernehmt \u2013 damit wir keine Doppelungen haben.',
-    'gifts.subtitle3': 'Geschenke sind \u00fcbrigens keine Bedingung \u2013 mit eurem Kommen habt ihr uns schon gl\u00fccklich gemacht.',
+    'gifts.subtitle3': 'Geschenke sind weder erforderlich noch erwartet \u2013 eure Anwesenheit freut uns am meisten.',
     'gifts.loading': 'Lade Geschenke\u2026',
     'gifts.claim': 'Ich schenke das!',
     'gifts.mine': '\u2713 Von euch reserviert',
